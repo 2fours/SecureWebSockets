@@ -86,10 +86,5 @@
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/socket.io-java-client/src/io/socket/WebsocketTransport.java</locationURI>
 		</link>
-		<link>
-			<name>src/io/socket/XhrTransport.java</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/socket.io-java-client/src/io/socket/XhrTransport.java</locationURI>
-		</link>
 	</linkedResources>
 </projectDescription>

@@ -25,7 +25,10 @@ import java.net.URI;
 
 import javax.net.SocketFactory;
 
+import org.apache.http.conn.ssl.SSLSocketFactory;
+
 import com.twofours.surespot.common.SurespotLog;
+import com.twofours.surespot.common.WebClientDevWrapper;
 
 import android.net.SSLCertificateSocketFactory;
 import android.os.Handler;
@@ -501,7 +504,7 @@ public class WebSocketConnection implements WebSocket {
 
 				SocketFactory factory = null;
 				if (mWebSocketURI.getScheme().equalsIgnoreCase(WSS_URI_SCHEME)) {
-					factory = SSLCertificateSocketFactory.getDefault();
+					factory = WebClientDevWrapper.getWebSocketFactory();
 				}
 				else {
 					factory = SocketFactory.getDefault();
