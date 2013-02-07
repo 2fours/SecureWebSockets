@@ -20,6 +20,8 @@ package de.tavendo.autobahn;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URI;
 
@@ -62,8 +64,7 @@ public class WebSocketConnection implements WebSocket {
 
 	public WebSocketConnection() {
 		SurespotLog.d(TAG, "WebSocket connection created.");
-
-		this.mHandler = new ThreadHandler(this);
+		this.mHandler = new ThreadHandler(this);		
 	}
 
 	//
@@ -187,11 +188,11 @@ public class WebSocketConnection implements WebSocket {
 	}
 
 	public void disconnect() {
-		if (mWebSocketWriter != null) {
+		if (mWebSocketWriter != null && mWebSocketWriter.isAlive()) {
 			mWebSocketWriter.forward(new WebSocketMessage.Close());
 		}
 		else {
-			SurespotLog.d(TAG, "Could not send WebSocket Close .. writer already null");
+			SurespotLog.d(TAG, "Could not send WebSocket Close .. writer already null (or dead)");
 		}
 
 		this.mPreviousConnection = false;
@@ -311,7 +312,8 @@ public class WebSocketConnection implements WebSocket {
 				}
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				SurespotLog.w(TAG, "onClose", e);
+				//e.printStackTrace();
 			}
 		}
 		else {
@@ -511,7 +513,7 @@ public class WebSocketConnection implements WebSocket {
 				}
 
 				// Do not replace host string with InetAddress or you lose automatic host name verification
-				this.mSocket = factory.createSocket(host, port);
+				this.mSocket = factory.createSocket( host, port);
 			}
 			catch (IOException e) {
 				this.mFailureMessage = e.getLocalizedMessage();
