@@ -26,12 +26,13 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
+import ch.boye.httpclientandroidlib.androidextra.Base64;
+
 import com.twofours.surespot.common.SurespotLog;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 
 /**
