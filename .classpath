@@ -5,5 +5,6 @@
 	<classpathentry excluding="com/cameronpalmer/echo/EchoActivity.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/common"/>
+	<classpathentry kind="lib" path="/android-async-http/libs/httpclientandroidlib-1.1.1.madman.jar" sourcepath="/home/adam/dev/surespot/libs/android/google/adam-httpclientandroidlib/script"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
