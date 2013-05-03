@@ -41,7 +41,7 @@ import android.util.Log;
  * The only method that needs to be called (from foreground thread) is forward(),
  * which is used to forward a WebSockets message to this object (running on
  * background thread) so that it can be formatted and sent out on the
- * underlying TCP socket.
+ * underlying TCP mSocket.
  */
 public class WebSocketWriter extends Thread {
 	private static final String TAG = WebSocketWriter.class.getCanonicalName();
@@ -52,13 +52,12 @@ public class WebSocketWriter extends Thread {
 	private final Random mRandom = new Random();
 	private final Handler mWebSocketConnectionHandler;
 	private final WebSocketOptions mWebSocketOptions;
-	private final ByteBuffer mApplicationBuffer;
-	private final Socket mSocket;
+	private final ByteBuffer mApplicationBuffer;	
 
 	private OutputStream mOutputStream;
 
 	private Handler mHandler;
-	private Socket socket;
+	private Socket mSocket;
 
 	/**
 	 * Create new WebSockets background writer.
@@ -66,7 +65,7 @@ public class WebSocketWriter extends Thread {
 	 * @param looper    The message looper of the background thread on which
 	 *                  this object is running.
 	 * @param master    The message handler of master (foreground thread).
-	 * @param socket    The socket channel created on foreground thread.
+	 * @param mSocket    The mSocket channel created on foreground thread.
 	 * @param options   WebSockets connection options.
 	 */
 	public WebSocketWriter(Handler master, Socket socket, WebSocketOptions options, String threadName) {
@@ -419,7 +418,7 @@ public class WebSocketWriter extends Thread {
 		//This can not be on the UI thread as it will puke during hostname resolution
 		OutputStream outputStream = null;
 		try {
-			outputStream = socket.getOutputStream();
+			outputStream = mSocket.getOutputStream();
 		} catch (IOException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 		}
