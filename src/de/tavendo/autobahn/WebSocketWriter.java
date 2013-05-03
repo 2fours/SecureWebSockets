@@ -53,6 +53,8 @@ public class WebSocketWriter extends Thread {
 	private final Handler mWebSocketConnectionHandler;
 	private final WebSocketOptions mWebSocketOptions;
 	private final ByteBuffer mApplicationBuffer;
+	private final Socket mSocket;
+
 	private OutputStream mOutputStream;
 
 	private Handler mHandler;
@@ -72,18 +74,7 @@ public class WebSocketWriter extends Thread {
 
 		this.mWebSocketConnectionHandler = master;
 		this.mWebSocketOptions = options;
-		
-		this.socket = socket;
-		
-		//this breaks when testing on local network because it tries to do a dns request on the ui thread
-//		OutputStream outputStream = null;
-//		try {
-//			outputStream = socket.getOutputStream();
-//		} catch (IOException e) {
-//			Log.e(TAG, e.getLocalizedMessage());
-//		}
-//		
-//		this.mOutputStream = outputStream;
+		this.mSocket = socket;
 		
 		this.mApplicationBuffer = ByteBuffer.allocate(options.getMaxFramePayloadSize() + 14);
 
@@ -434,7 +425,6 @@ public class WebSocketWriter extends Thread {
 		}
 		
 		this.mOutputStream = outputStream;
-				
 		Looper.prepare();
 
 		this.mHandler = new ThreadHandler(this);
