@@ -25,9 +25,10 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import com.twofours.surespot.common.SurespotLog;
+
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.util.Pair;
 import de.tavendo.autobahn.WebSocketMessage.WebSocketCloseCode;
 
@@ -92,7 +93,7 @@ public class WebSocketReader extends Thread {
 		this.mFrameHeader = null;
 		this.mState = ReaderState.STATE_CONNECTING;
 
-		Log.d(TAG, "WebSocket reader created.");
+		SurespotLog.d(TAG, "WebSocket reader created.");
 	}
 
 
@@ -104,7 +105,7 @@ public class WebSocketReader extends Thread {
 		mStopped = true;
 			
 
-		Log.d(TAG, "quit");
+		SurespotLog.d(TAG, "quit");
 	}
 
 
@@ -585,7 +586,7 @@ public class WebSocketReader extends Thread {
 		mApplicationBuffer.position(end);
 		mApplicationBuffer.get(statusBuf, 0, statusMessageLength);
 		String statusMessage = new String(statusBuf, WebSocket.UTF8_ENCODING);
-		Log.w(TAG, String.format("Status: %d (%s)", statusCode, statusMessage));
+		SurespotLog.w(TAG, String.format("Status: %d (%s)", statusCode, statusMessage));
 		return new Pair<Integer, String>(statusCode, statusMessage);
 	}
 
@@ -621,13 +622,13 @@ public class WebSocketReader extends Thread {
 		try {
 			inputStream = mSocket.getInputStream();
 		} catch (IOException e) {
-			Log.e(TAG, e.getLocalizedMessage());
+			SurespotLog.w(TAG, e.getLocalizedMessage());
 			return;
 		}
 
 		this.mInputStream = inputStream;
 
-		Log.d(TAG, "WebSocker reader running.");
+		SurespotLog.d(TAG, "WebSocker reader running.");
 		mApplicationBuffer.clear();
 
 		while (!mStopped) {
@@ -639,30 +640,30 @@ public class WebSocketReader extends Thread {
 					while (consumeData()) {
 					}
 				} else if (bytesRead == -1) {
-					Log.d(TAG, "run() : ConnectionLost");
+					SurespotLog.d(TAG, "run() : ConnectionLost");
 
 					notify(new WebSocketMessage.ConnectionLost());
 					this.mStopped = true;
 				} else {
-					Log.e(TAG, "WebSocketReader read() failed.");
+					SurespotLog.w(TAG, "WebSocketReader read() failed.");
 				}
 				
 			} catch (WebSocketException e) {
-				Log.d(TAG, "run() : WebSocketException (" + e.toString() + ")");
+				SurespotLog.d(TAG, "run() : WebSocketException (" + e.toString() + ")");
 
 				// wrap the exception and notify master
 				notify(new WebSocketMessage.ProtocolViolation(e));
 			} catch (SocketException e) {
-				Log.d(TAG, "run() : SocketException (" + e.toString() + ")");
+				SurespotLog.d(TAG, "run() : SocketException (" + e.toString() + ")");
 
 				// wrap the exception and notify master
 				notify(new WebSocketMessage.ConnectionLost());
 			} catch (IOException e) {
-				Log.d(TAG, "run() : IOException (" + e.toString() + ")");
+				SurespotLog.d(TAG, "run() : IOException (" + e.toString() + ")");
 				
 				notify(new WebSocketMessage.ConnectionLost());
 			} catch (Exception e) {
-				Log.d(TAG, "run() : Exception (" + e.toString() + ")");
+				SurespotLog.d(TAG, "run() : Exception (" + e.toString() + ")");
 
 				// wrap the exception and notify master
 				notify(new WebSocketMessage.Error(e));
@@ -670,6 +671,6 @@ public class WebSocketReader extends Thread {
 		}
 
 
-		Log.d(TAG, "WebSocket reader ended.");
+		SurespotLog.d(TAG, "WebSocket reader ended.");
 	}
 }

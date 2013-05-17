@@ -33,7 +33,7 @@ import com.twofours.surespot.common.SurespotLog;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
+
 
 /**
  * WebSocket writer, the sending leg of a WebSockets connection.
@@ -77,7 +77,7 @@ public class WebSocketWriter extends Thread {
 		
 		this.mApplicationBuffer = ByteBuffer.allocate(options.getMaxFramePayloadSize() + 14);
 
-		Log.d(TAG, "WebSocket writer created.");
+		SurespotLog.d(TAG, "WebSocket writer created.");
 	}
 
 
@@ -374,7 +374,7 @@ public class WebSocketWriter extends Thread {
 		} else if (msg instanceof WebSocketMessage.Quit) {
 			Looper.myLooper().quit();
 
-			Log.d(TAG, "WebSocket writer ended.");
+			SurespotLog.d(TAG, "WebSocket writer ended.");
 		} else {
 			processAppMessage(msg);
 		}
@@ -388,11 +388,11 @@ public class WebSocketWriter extends Thread {
 
 			mOutputStream.write(mApplicationBuffer.array(), mApplicationBuffer.position(), mApplicationBuffer.limit());
 		} catch (SocketException e) {
-			Log.e(TAG, "run() : SocketException (" + e.toString() + ")");
+			SurespotLog.w(TAG, "run() : SocketException (" + e.toString() + ")");
 
 			notify(new WebSocketMessage.ConnectionLost());
 		} catch (IOException e) {
-			Log.e(TAG, "run() : IOException (" + e.toString() + ")");
+			SurespotLog.w(TAG, "run() : IOException (" + e.toString() + ")");
 
 		} catch (Exception e) {
 			notify(new WebSocketMessage.Error(e));
@@ -420,7 +420,7 @@ public class WebSocketWriter extends Thread {
 		try {
 			outputStream = mSocket.getOutputStream();
 		} catch (IOException e) {
-			Log.e(TAG, e.getLocalizedMessage());
+			SurespotLog.w(TAG, e.getLocalizedMessage());
 		}
 		
 		this.mOutputStream = outputStream;
@@ -429,7 +429,7 @@ public class WebSocketWriter extends Thread {
 		this.mHandler = new ThreadHandler(this);
 
 		synchronized (this) {
-			Log.d(TAG, "WebSocker writer running.");
+			SurespotLog.d(TAG, "WebSocker writer running.");
 
 			notifyAll();
 		}
