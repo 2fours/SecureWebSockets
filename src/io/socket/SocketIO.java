@@ -294,7 +294,9 @@ public class SocketIO {
 	 * Disconnect the socket.
 	 */
 	public void disconnect() {
-		this.connection.unregister(this);
+		if (connection != null) {
+			this.connection.unregister(this);
+		}
 	}
 
 	/**
